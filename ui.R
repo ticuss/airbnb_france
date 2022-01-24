@@ -7,7 +7,13 @@ library(leaflet)
 library(shinydashboard)
 library(tm)
 
-listing <- read_csv('listing_paris.csv', na = c("", "NA", "0", NaN))
+
+listing_paris <- read_csv('data/listing_paris.csv', na = c("", "NA", "0", NaN))
+listing_lyon <- read_csv('data/listing_lyon.csv', na = c("", "NA", "0", NaN))
+listing_bordeaux <- read_csv('data/listing_bordeaux.csv', na = c("", "NA", "0", NaN))
+a <- rbind(listing_paris, listing_lyon)
+listing <- rbind(listing_lyon,listing_paris,listing_bordeaux)
+
 listing <- listing %>% 
   mutate(
     income_monthly = round(price*availability_365/12),

@@ -7,14 +7,20 @@ library(leaflet)
 library(shinydashboard)
 library(tm)
 
-listing <- read_csv('listing_paris.csv', na = c("", "NA", "0", NaN))
+listing_paris <- read_csv('data/listing_paris.csv', na = c("", "NA", "0", NaN))
+listing_lyon <- read_csv('data/listing_lyon.csv', na = c("", "NA", "0", NaN))
+listing_bordeaux <- read_csv('data/listing_bordeaux.csv', na = c("", "NA", "0", NaN))
+
+listing <- rbind(listing_lyon,listing_paris,listing_bordeaux)
+
 listing <- listing %>% 
   mutate(
     income_monthly = round(price*availability_365/12),
     highly_available = availability_365 >=60,
     freq_review = (today() - last_review) <=180
   )
-
+# 33100
+# 
 listing_map <- listing %>% 
   select(id, neighbourhood, longitude, latitude, room_type, price, number_of_reviews, availability_365, income_monthly) %>% 
   group_by(neighbourhood, room_type) %>% 
@@ -39,7 +45,8 @@ col_def <- tibble(
   'reviews_per_month' = "Nombre d'avis par mois - moyenne",
   'availability_365' = "Nombre de jour disponible à la location par an", 
   'income_monthly'= "Revenue par mois - moyenne", 
-  'calculated_host_listings_count' = 'Nombre de logement par hôte'
+  'calculated_host_listings_c ount' = 'Nombre de logement par hôte',
+
 )
 
 shinyServer(function(input, output) {
