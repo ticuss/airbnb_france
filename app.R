@@ -5,10 +5,7 @@ library(ggplot2)
 library(lubridate)
 library(leaflet)
 library(shinydashboard)
-library(wordcloud)
-library(RColorBrewer)
 library(tm)
-library(sentimentr)
 
 #### dataset ####
 listing <- read_csv('listing_paris.csv', na = c("", "NA", "0", NaN))
@@ -109,9 +106,9 @@ main_body <- dashboardBody(
             fluidRow(box(leafletOutput("map_bdx"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
                      box(plotOutput("room_type_bdx"), status = "warning", title = "Répartition des types d'hébergements", width = 4)
                          ),
-            fluidRow(box(plotOutput('wordcloud'), status = "danger", title = 'Les avis', width = 4),
-                     box(plotOutput('sentiment_histo'), status = "warning", title = 'Les sentiments', width = 8)
-                     )
+            # fluidRow(box(plotOutput('wordcloud'), status = "danger", title = 'Les avis', width = 4),
+            #          box(plotOutput('sentiment_histo'), status = "warning", title = 'Les sentiments', width = 8)
+            #          )
                      
         ),
         tabItem( # Filtre par zones
@@ -156,7 +153,7 @@ server <- function(input, output) {
     output$map_bdx <- renderLeaflet({
         leaflet(data=listing_map) %>%
         addTiles() %>% 
-        setView(lng = -0.5759, lat = 44.84, zoom = 12) %>% 
+        setView(lng = -0.5759, lat = 44.84, zoom = 5) %>% 
         addMarkers(lng=~longitude, lat=~latitude,
                    popup = ~paste(
                        "<b>", neighbourhood, "</b><br/>",
@@ -176,18 +173,18 @@ server <- function(input, output) {
             theme_minimal()
     })
     
-    output$wordcloud <- renderPlot({
-        set.seed(1234)
-        wordcloud(words = df_wordcloud$word, freq = df_wordcloud$freq, min.freq = 3,
-                  max.words=200, random.order=FALSE, rot.per=0.35,
-                  colors=brewer.pal(8, "Dark2"))
-    })
+    # output$wordcloud <- renderPlot({
+    #     set.seed(1234)
+    #     wordcloud(words = df_wordcloud$word, freq = df_wordcloud$freq, min.freq = 3,
+    #               max.words=200, random.order=FALSE, rot.per=0.35,
+    #               colors=brewer.pal(8, "Dark2"))
+    # })
     
-    output$sentiment_histo <- renderPlot({
-        ggplot(sentiment, aes(ave_sentiment)) +
-            geom_histogram(binwidth = 0.01, fill='sienna1')+
-            theme_minimal()
-    })
+    # output$sentiment_histo <- renderPlot({
+    #     ggplot(sentiment, aes(ave_sentiment)) +
+    #         geom_histogram(binwidth = 0.01, fill='sienna1')+
+    #         theme_minimal()
+    # })
     
     # Tab 6: Map des zones
     listing_zone <- reactive({
