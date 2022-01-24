@@ -11,7 +11,6 @@ library(tm)
 listing_paris <- read_csv('data/listing_paris.csv', na = c("", "NA", "0", NaN))
 listing_lyon <- read_csv('data/listing_lyon.csv', na = c("", "NA", "0", NaN))
 listing_bordeaux <- read_csv('data/listing_bordeaux.csv', na = c("", "NA", "0", NaN))
-a <- rbind(listing_paris, listing_lyon)
 listing <- rbind(listing_lyon,listing_paris,listing_bordeaux)
 
 listing <- listing %>% 
@@ -50,9 +49,20 @@ col_def <- tibble(
 
 main_sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem('Dashboard', icon = icon('chart-pie'),
-             menuSubItem('Bordeaux et ses alentours', tabName = 'tab_bdx'),
-             menuSubItem('Zoom sur les quartiers', tabName = 'tab_zones')
+    menuItem('Vision Globale', icon = icon('home')
+
+    ),
+    menuItem('Paris', icon = icon('broadcast-tower'),
+             menuSubItem('Paris', tabName = 'tab_bdx'),
+             menuSubItem('Zoom sur les quartiers de Paris', tabName = 'tab_zones')
+    ),
+    menuItem('Lyon', icon = icon('cheese'),
+             menuSubItem('Lyon', tabName = 'tab_bdx'),
+             menuSubItem('Zoom sur les quartiers de Lyon', tabName = 'tab_zones')
+    ),
+    menuItem('Bordeaux', icon = icon('wine-glass-alt'),
+             menuSubItem('Bordeaux', tabName = 'tab_bdx'),
+             menuSubItem('Zoom sur les quartiers de Bordeaux', tabName = 'tab_zones')
     ),
     menuItem('Dataset', icon = icon('chart-bar'),
              menuSubItem('Demo Dataset', tabName = 'tab_demo')
@@ -119,7 +129,7 @@ main_body <- dashboardBody(
   )
 )
 shinyUI(dashboardPage(skin = "black",
-                    dashboardHeader(title = 'Airbnb à Bordeaux'),
+                    dashboardHeader(title = 'Airbnb en France'),
                     main_sidebar, 
                     main_body
 )
