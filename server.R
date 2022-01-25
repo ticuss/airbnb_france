@@ -171,8 +171,8 @@ shinyServer(function(input, output) {
     round(mean(listing_zone()$income_monthly, na.rm = T))
   })
   
-  top_airbnb <- listing %>% select(name, number_of_reviews) %>% arrange(desc(number_of_reviews))
-  
-  output$table <- renderDataTable({DT::datatable(head(top_airbnb), selection = "single",options=list(stateSave = TRUE))})
+  top_airbnb <- head(listing,100) %>% select(name, number_of_reviews) %>% arrange(desc(number_of_reviews))
+
+  output$table <- renderDataTable({DT::datatable(top_airbnb ,escape = FALSE,selection = "single", options=list( pageLength = 6, dom = 'tip'))})
   
 } )
