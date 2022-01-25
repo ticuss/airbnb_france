@@ -72,7 +72,7 @@ main_body <- dashboardBody(
     ),
     
     # Page 2
-    tabItem( # Tab 1: Bordeaux et ses alentours
+    tabItem(
       tabName = 'tab_glb',
       fluidRow(
         valueBox(round(nrow(listing)), "Nombre de logement", icon = icon("airbnb"), color = "blue"),
@@ -83,13 +83,11 @@ main_body <- dashboardBody(
         valueBox(round(mean(listing$income_monthly, na.rm = T)), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
       fluidRow(box(leafletOutput("map_bdx"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
-      box(column(3.5,
-              dataTableOutput("table")
-        ),title = 'Top 10', status = "danger",width = 4)
+      box(column(3.5, dataTableOutput("table")), title = 'Top 100 airbnb appartements en France ', status = "danger", width = 4),
 
       )
     ),
-    tabItem( # Tab 1: Bordeaux et ses alentours
+    tabItem( 
       tabName = 'tab_prs',
       fluidRow(
         valueBox(round(nrow(listing_paris)), "Nombre de logement", icon = icon("airbnb"), color = "blue"),
@@ -100,7 +98,8 @@ main_body <- dashboardBody(
         valueBox(round(mean(listing_paris$income_monthly, na.rm = T)), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
       fluidRow(box(leafletOutput("map_prs"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
-               box(plotOutput("room_type_prs"), status = "warning", title = "Répartition des types d'hébergements", width = 4)
+               box(plotOutput("room_type_prs"), status = "warning", title = "Répartition des types d'hébergements", width = 4),
+               
       ),
     ),
     tabItem( # Filtre par zones
@@ -121,7 +120,7 @@ main_body <- dashboardBody(
         valueBox(textOutput('income'), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
       fluidRow(box(leafletOutput("map"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
-               box(plotOutput("room_type"), status = "warning", title = "Répartition des types d'hébergements", width = 4)
+              box(plotOutput("room_type"), status = "warning", title = "Répartition des types d'hébergements", width = 4)
       )
       
     )
