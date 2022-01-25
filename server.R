@@ -6,6 +6,9 @@ library(lubridate)
 library(leaflet)
 library(shinydashboard)
 library(tm)
+library(DT)
+
+
 
 listing_paris <- read_csv('data/listing_paris.csv', na = c("", "NA", "0", NaN))
 listing_lyon <- read_csv('data/listing_lyon.csv', na = c("", "NA", "0", NaN))
@@ -167,4 +170,9 @@ shinyServer(function(input, output) {
   output$income <- renderText({
     round(mean(listing_zone()$income_monthly, na.rm = T))
   })
+  
+  top_airbnb <- listing %>% select(name, number_of_reviews) %>% arrange(desc(number_of_reviews))
+  
+  output$table <- renderDataTable({DT::datatable(head(top_airbnb), selection = "single",options=list(stateSave = TRUE))})
+  
 } )

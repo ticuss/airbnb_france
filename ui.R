@@ -82,7 +82,11 @@ main_body <- dashboardBody(
         valueBox(round(mean(listing$minimum_nights, na.rm = T)), "Nombre de nuits minimum - moyenne", icon = icon("bed"), color = "green"),
         valueBox(round(mean(listing$income_monthly, na.rm = T)), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
-      fluidRow(box(leafletOutput("map_bdx"), status = "danger", title = 'Bordeaux et ses alentours', width = 8)
+      fluidRow(box(leafletOutput("map_bdx"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
+      box(column(3.5,
+              dataTableOutput("table")
+        ),title = 'Top 10', status = "danger",width = 4)
+
       )
     ),
     tabItem( # Tab 1: Bordeaux et ses alentours
