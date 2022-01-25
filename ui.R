@@ -20,17 +20,11 @@ listing <- listing %>%
     freq_review = (today() - last_review) <=180
   )
 
-listing_map <- listing %>% 
-  select(id, neighbourhood, longitude, latitude, room_type, price, number_of_reviews, availability_365, income_monthly) %>% 
-  group_by(neighbourhood, room_type) %>% 
-  summarise(
-    nb_bnb = n(),
-    price = mean(price, na.rm = T),
-    nb_reviews = mean(number_of_reviews, na.rm = T),
-    availability_365 = mean(availability_365, na.rm = T),
-    income_monthly = mean(income_monthly, na.rm = T),
-    longitude = median(longitude),
-    latitude = median(latitude)
+listing_paris <- listing_paris %>% 
+  mutate(
+    income_monthly = round(price*availability_365/12),
+    highly_available = availability_365 >=60,
+    freq_review = (today() - last_review) <=180
   )
 
 col_def <- tibble(
@@ -49,20 +43,12 @@ col_def <- tibble(
 
 main_sidebar <- dashboardSidebar(
   sidebarMenu(
-    menuItem('Vision Globale', icon = icon('home')
+    menuItem('Vision Globale', icon = icon('home'), tabName = 'tab_glb'
 
     ),
     menuItem('Paris', icon = icon('broadcast-tower'),
-             menuSubItem('Paris', tabName = 'tab_bdx'),
-             menuSubItem('Zoom sur les quartiers de Paris', tabName = 'tab_zones')
-    ),
-    menuItem('Lyon', icon = icon('cheese'),
-             menuSubItem('Lyon', tabName = 'tab_bdx'),
-             menuSubItem('Zoom sur les quartiers de Lyon', tabName = 'tab_zones')
-    ),
-    menuItem('Bordeaux', icon = icon('wine-glass-alt'),
-             menuSubItem('Bordeaux', tabName = 'tab_bdx'),
-             menuSubItem('Zoom sur les quartiers de Bordeaux', tabName = 'tab_zones')
+             menuSubItem('Paris', tabName = 'tab_prs'),
+             menuSubItem('Zoom sur les quartiers de Paris', tabName = 'tab_zones_prs')
     ),
     menuItem('Dataset', icon = icon('chart-bar'),
              menuSubItem('Demo Dataset', tabName = 'tab_demo')
@@ -87,7 +73,7 @@ main_body <- dashboardBody(
     
     # Page 2
     tabItem( # Tab 1: Bordeaux et ses alentours
-      tabName = 'tab_bdx',
+      tabName = 'tab_glb',
       fluidRow(
         valueBox(round(nrow(listing)), "Nombre de logement", icon = icon("airbnb"), color = "blue"),
         valueBox(round(mean(listing$price, na.rm = T)), "Prix - moyenne", icon = icon("euro-sign"), color = "light-blue"),
@@ -96,21 +82,30 @@ main_body <- dashboardBody(
         valueBox(round(mean(listing$minimum_nights, na.rm = T)), "Nombre de nuits minimum - moyenne", icon = icon("bed"), color = "green"),
         valueBox(round(mean(listing$income_monthly, na.rm = T)), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
-      fluidRow(box(leafletOutput("map_bdx"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
-               box(plotOutput("room_type_bdx"), status = "warning", title = "Répartition des types d'hébergements", width = 4)
+      fluidRow(box(leafletOutput("map_bdx"), status = "danger", title = 'Bordeaux et ses alentours', width = 8)
+      )
+    ),
+    tabItem( # Tab 1: Bordeaux et ses alentours
+      tabName = 'tab_prs',
+      fluidRow(
+        valueBox(round(nrow(listing_paris)), "Nombre de logement", icon = icon("airbnb"), color = "blue"),
+        valueBox(round(mean(listing_paris$price, na.rm = T)), "Prix - moyenne", icon = icon("euro-sign"), color = "light-blue"),
+        valueBox(round(mean(listing_paris$availability_365, na.rm = T)), "Disponibilité par an - moyenne", icon = icon("door-open"), color = "aqua"),
+        valueBox(round(mean(listing_paris$number_of_reviews, na.rm = T)), "Nombre d'avis - moyenne", icon = icon("star"), color = "olive"),
+        valueBox(round(mean(listing_paris$minimum_nights, na.rm = T)), "Nombre de nuits minimum - moyenne", icon = icon("bed"), color = "green"),
+        valueBox(round(mean(listing_paris$income_monthly, na.rm = T)), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
-      # fluidRow(box(plotOutput('wordcloud'), status = "danger", title = 'Les avis', width = 4),
-      #          box(plotOutput('sentiment_histo'), status = "warning", title = 'Les sentiments', width = 8)
-      #          )
-      
+      fluidRow(box(leafletOutput("map_prs"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
+               box(plotOutput("room_type_prs"), status = "warning", title = "Répartition des types d'hébergements", width = 4)
+      ),
     ),
     tabItem( # Filtre par zones
-      tabName = 'tab_zones',
+      tabName = 'tab_zones_prs',
       fluidRow(
         column(3,
                selectInput("zone",
                            "Choisir le zone :",
-                           choices = unique(listing$neighbourhood)
+                           choices = unique(listing_paris$neighbourhood)
                )
         )),
       fluidRow(

@@ -19,9 +19,28 @@ listing <- listing %>%
     highly_available = availability_365 >=60,
     freq_review = (today() - last_review) <=180
   )
+listing_paris <- listing_paris %>% 
+  mutate(
+    income_monthly = round(price*availability_365/12),
+    highly_available = availability_365 >=60,
+    freq_review = (today() - last_review) <=180
+  )
 # 33100
 # 
 listing_map <- listing %>% 
+  select(id, neighbourhood, longitude, latitude, room_type, price, number_of_reviews, availability_365, income_monthly) %>% 
+  group_by(neighbourhood, room_type) %>% 
+  summarise(
+    nb_bnb = n(),
+    price = mean(price, na.rm = T),
+    nb_reviews = mean(number_of_reviews, na.rm = T),
+    availability_365 = mean(availability_365, na.rm = T),
+    income_monthly = mean(income_monthly, na.rm = T),
+    longitude = median(longitude),
+    latitude = median(latitude)
+  )
+
+  listing_map_paris <- listing_paris %>% 
   select(id, neighbourhood, longitude, latitude, room_type, price, number_of_reviews, availability_365, income_monthly) %>% 
   group_by(neighbourhood, room_type) %>% 
   summarise(
@@ -59,7 +78,23 @@ shinyServer(function(input, output) {
   output$map_bdx <- renderLeaflet({
     leaflet(data=listing_map) %>%
       addTiles() %>% 
-      setView(lng = -0.5759, lat = 44.84, zoom = 5) %>% 
+      setView(lng = 2.35, lat = 47, zoom = 5.4) %>% 
+      addMarkers(lng=~longitude, lat=~latitude,
+                 popup = ~paste(
+                   "<b>", neighbourhood, "</b><br/>",
+                   "Type: ", room_type, "<br/>",
+                   "count: ", as.character(nb_bnb), "<br/>",
+                   "price: ", round(price), "<br/>",
+                   "nb_reviews: ", round(nb_reviews), "<br/>",
+                   "available_per_year: ", round(availability_365), "<br/>"
+                 ), 
+                 clusterOptions = markerClusterOptions())
+  })
+
+  output$map_prs <- renderLeaflet({
+    leaflet(data=listing_map_paris) %>%
+      addTiles() %>%  #48.833, 2.333
+      setView(lng = 2.35, lat = 48.86, zoom = 12) %>% 
       addMarkers(lng=~longitude, lat=~latitude,
                  popup = ~paste(
                    "<b>", neighbourhood, "</b><br/>",
@@ -72,26 +107,14 @@ shinyServer(function(input, output) {
                  clusterOptions = markerClusterOptions())
   })
   
-  output$room_type_bdx <- renderPlot({
-    listing %>% 
+  output$room_type_prs <- renderPlot({
+    listing_paris %>% 
       ggplot()+
       geom_bar(aes(x=room_type), fill='sienna1')+
       theme_minimal()
   })
   
-  # output$wordcloud <- renderPlot({
-  #     set.seed(1234)
-  #     wordcloud(words = df_wordcloud$word, freq = df_wordcloud$freq, min.freq = 3,
-  #               max.words=200, random.order=FALSE, rot.per=0.35,
-  #               colors=brewer.pal(8, "Dark2"))
-  # })
-  
-  # output$sentiment_histo <- renderPlot({
-  #     ggplot(sentiment, aes(ave_sentiment)) +
-  #         geom_histogram(binwidth = 0.01, fill='sienna1')+
-  #         theme_minimal()
-  # })
-  
+
   # Tab 6: Map des zones
   listing_zone <- reactive({
     listing %>% 
