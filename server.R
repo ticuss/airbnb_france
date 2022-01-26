@@ -81,7 +81,7 @@ shinyServer(function(input, output) {
   output$map_bdx <- renderLeaflet({
     leaflet(data=listing_map) %>%
       addTiles() %>% 
-      setView(lng = 2.35, lat = 47, zoom = 5.4) %>% 
+      setView(lng = 2.35, lat = 47, zoom = 6) %>% 
       addMarkers(lng=~longitude, lat=~latitude,
                  popup = ~paste(
                    "<b>", neighbourhood, "</b><br/>",
@@ -171,10 +171,10 @@ shinyServer(function(input, output) {
     round(mean(listing_zone()$income_monthly, na.rm = T))
   })
   
-  top_airbnb <- listing %>% select(name, number_of_reviews) %>% arrange(desc(number_of_reviews))
+  top_airbnb <- listing %>% select(name, number_of_reviews, income_monthly)  %>% arrange(-number_of_reviews)
   top_airbnb <- head(top_airbnb,100)
 
 
-  output$table <- renderDataTable({DT::datatable(top_airbnb ,escape = FALSE,selection = "single", options=list( pageLength = 6, dom = 'tip'))})
+  output$table <- renderDataTable({DT::datatable(top_airbnb ,escape = FALSE,selection = "single", options=list( pageLength = 5, dom = 'tip'))})
   
 } )
