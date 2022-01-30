@@ -28,8 +28,7 @@ listing_paris <- listing_paris %>%
     highly_available = availability_365 >=60,
     freq_review = (today() - last_review) <=180
   )
-# 33100
-# 
+
 listing_map <- listing %>% 
   select(id, neighbourhood, longitude, latitude, room_type, price, number_of_reviews, availability_365, income_monthly) %>% 
   group_by(neighbourhood, room_type) %>% 
@@ -72,12 +71,11 @@ col_def <- tibble(
 )
 
 shinyServer(function(input, output) {
-  # Tab 1: Demo dataset
+
   output$demo <- renderTable({
     head(listing, n = input$obs)
   })
   
-  # Tab 5: Map Bordeaux
   output$map_bdx <- renderLeaflet({
     leaflet(data=listing_map) %>%
       addTiles() %>% 
@@ -96,7 +94,7 @@ shinyServer(function(input, output) {
 
   output$map_prs <- renderLeaflet({
     leaflet(data=listing_map_paris) %>%
-      addTiles() %>%  #48.833, 2.333
+      addTiles() %>% 
       setView(lng = 2.35, lat = 48.86, zoom = 12) %>% 
       addMarkers(lng=~longitude, lat=~latitude,
                  popup = ~paste(
@@ -118,7 +116,6 @@ shinyServer(function(input, output) {
   })
   
 
-  # Tab 6: Map des zones
   listing_zone <- reactive({
     listing %>% 
       filter(neighbourhood == input$zone)
