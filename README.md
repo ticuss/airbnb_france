@@ -6,7 +6,7 @@ The Dashboard is showing some key values of Airbnb apartments, like : the averag
 
 For Paris you can navigate on the map by neighborhood by selecting which one do you like.
 
-The data source 
+The data sources 
 - Bordeaux : 11 December, 2021	
 - Paris: 08 January, 2022	
 - Lyon: 11 December, 2021	
