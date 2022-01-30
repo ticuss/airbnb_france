@@ -78,7 +78,7 @@ main_body <- dashboardBody(
         valueBox(round(mean(listing$minimum_nights, na.rm = T)), "Nombre de nuits minimum - moyenne", icon = icon("bed"), color = "green"),
         valueBox(round(mean(listing$income_monthly, na.rm = T)), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
-      fluidRow(box(leafletOutput("map_bdx",height = 550), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
+      fluidRow(box(leafletOutput("map_bdx",height = 550), status = "danger", title = 'Localisation des Airbnb en France', width = 8),
       box(column(3.5, dataTableOutput("table")), height = 613, title = 'Top 100 airbnb appartements en France ', status = "danger", width = 4),
 
       )
@@ -93,7 +93,7 @@ main_body <- dashboardBody(
         valueBox(round(mean(listing_paris$minimum_nights, na.rm = T)), "Nombre de nuits minimum - moyenne", icon = icon("bed"), color = "green"),
         valueBox(round(mean(listing_paris$income_monthly, na.rm = T)), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
-      fluidRow(box(leafletOutput("map_prs"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
+      fluidRow(box(leafletOutput("map_prs"), status = "danger", title = 'Paris et ses alentours', width = 8),
                box(plotOutput("room_type_prs"), status = "warning", title = "Répartition des types d'hébergements", width = 4),
                
       ),
@@ -115,7 +115,7 @@ main_body <- dashboardBody(
         valueBox(textOutput('night'), "Nombre de nuits minimum - moyenne", icon = icon("bed"), color = "green"),
         valueBox(textOutput('income'), "Revenue Mensuel - moyenne", icon = icon("credit-card"), color = "lime")
       ),
-      fluidRow(box(leafletOutput("map"), status = "danger", title = 'Bordeaux et ses alentours', width = 8),
+      fluidRow(box(leafletOutput("map"), status = "danger", title = 'Paris et ses alentours', width = 8),
               box(plotOutput("room_type"), status = "warning", title = "Répartition des types d'hébergements", width = 4)
       )
       
