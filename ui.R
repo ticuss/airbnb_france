@@ -52,17 +52,14 @@ main_sidebar <- dashboardSidebar(
     ),
     menuItem('Dataset', icon = icon('chart-bar'),
              menuSubItem('Demo Dataset', tabName = 'tab_demo')
-             # menuSubItem('Variables Quantitatives', tabName = 'tab_quantitative'),
-             # menuSubItem('Variables Qualitatives', tabName = 'tab_qualitative'),
-             # menuSubItem('Zoom sur les variables', tabName = 'tab_2vars')
     )
   )
 )
 
 main_body <- dashboardBody(
   tabItems( 
-    # Page 1
-    tabItem( # Tab1: Demo
+    
+    tabItem(
       tabName = 'tab_demo',
       fluidRow(
         column(3,
@@ -71,7 +68,6 @@ main_body <- dashboardBody(
       div(style = 'overflow-x: scroll',tableOutput("demo"))
     ),
     
-    # Page 2
     tabItem(
       tabName = 'tab_glb',
       fluidRow(
@@ -102,7 +98,7 @@ main_body <- dashboardBody(
                
       ),
     ),
-    tabItem( # Filtre par zones
+    tabItem( 
       tabName = 'tab_zones_prs',
       fluidRow(
         column(3,
