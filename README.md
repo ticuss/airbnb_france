@@ -11,5 +11,5 @@ The data sources
 - Paris: 08 January, 2022	
 - Lyon: 11 December, 2021	
 
-you can find them on this link: http://insideairbnb.com/get-the-data.html
+You can find them on this link: http://insideairbnb.com/get-the-data.html
 
