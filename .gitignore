@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+rename_commits.sh
+.gitignore
